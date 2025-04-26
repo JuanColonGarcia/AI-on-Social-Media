@@ -1,0 +1,9 @@
+pandas
+nltk
+scikit-learn
+matplotlib
+seaborn
+wordcloud
+vaderSentiment
+praw
+asyncpraw
