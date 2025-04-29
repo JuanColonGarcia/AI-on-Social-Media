@@ -25,8 +25,8 @@ def preprocesar_titulo(titulo):
 
 # 🔄 Cargar el modelo y el vectorizador
 def cargar_modelo_y_vectorizador():
-    modelo_random_forest = joblib.load('modelo_random_forest.pkl')  # Cargar el modelo guardado
-    vectorizer = joblib.load('vectorizer.pkl')  # Cargar el vectorizador
+    modelo_random_forest = joblib.load('models/modelo_random_forest.pkl')  # Cargar el modelo guardado
+    vectorizer = joblib.load('models/vectorizer.pkl')  # Cargar el vectorizador
     return modelo_random_forest, vectorizer
 
 # 🔄 Función para hacer predicciones
@@ -47,7 +47,7 @@ def hacer_predicciones(df_nuevos_datos, modelo_random_forest, vectorizer):
 # 🖥 Función principal que ejecuta todo
 def main():
     # 🔄 Cargar los nuevos datos
-    df_nuevos_datos = pd.read_csv("nuevos_datos.csv")  # Asegúrate de tener este archivo
+    df_nuevos_datos = pd.read_csv("data/nuevos_datos_limpios.csv")  # Asegúrate de tener este archivo
     
     # 🔄 Cargar el modelo y el vectorizador
     modelo_random_forest, vectorizer = cargar_modelo_y_vectorizador()
@@ -56,7 +56,7 @@ def main():
     df_nuevos_datos_con_predicciones = hacer_predicciones(df_nuevos_datos, modelo_random_forest, vectorizer)
     
     # 🔄 Guardar las predicciones en un archivo CSV
-    df_nuevos_datos_con_predicciones.to_csv('predicciones.csv', index=False)
+    df_nuevos_datos_con_predicciones.to_csv('data/predicciones.csv', index=False)
     print("Predicciones guardadas en 'predicciones.csv'")
 
 if __name__ == '__main__':
