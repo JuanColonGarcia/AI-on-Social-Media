@@ -60,22 +60,24 @@ def extraer_posts_con_opinion(subreddit_name, keywords, limite=1000):
             })
     return posts
 
+
 # Palabras clave para buscar opiniones más polarizadas
 keywords_opinion = [
-    "ChatGPT helps students", "ChatGPT can be dangerous", "ChatGPT improves communication", "ChatGPT makes mistakes", 
-    "ChatGPT can't replace humans", "ChatGPT saves time", "ChatGPT is overrated", "ChatGPT is addictive", 
-    "ChatGPT enhances learning", "ChatGPT should be banned", "ChatGPT needs regulation", "Gemini is better than ChatGPT", 
-    "Gemini saves time", "Gemini is creative", "Gemini helps students", "Gemini improves productivity", 
-    "Gemini enhances creativity", "Gemini should be banned", "Gemini is disappointing", "Copilot improves productivity", 
-    "Copilot makes coding easier", "Copilot is innovative", "Copilot is overrated", "Copilot has potential", 
-    "Copilot is not accurate", "Copilot saves time", "AI threatens creative jobs", "AI helps with homework", 
-    "AI is the end of creativity", "AI will destroy education", "AI is misunderstood", "AI can boost learning", 
-    "AI creates new possibilities", "AI helps in healthcare", "AI threatens artists", "AI helps in art", 
-    "AI is for lazy people", "AI enhances writing", "AI is replacing writers", "AI needs regulation", 
-    "AI threatens freedom", "AI enhances creativity", "AI creates more problems", "AI improves customer experience", 
-    "AI affects mental health", "AI should not replace people", "AI is not fair", "AI affects social interaction", 
+    "ChatGPT helps students", "ChatGPT can be dangerous", "ChatGPT improves communication", "ChatGPT makes mistakes",
+    "ChatGPT can't replace humans", "ChatGPT saves time", "ChatGPT is overrated", "ChatGPT is addictive",
+    "ChatGPT enhances learning", "ChatGPT should be banned", "ChatGPT needs regulation", "Gemini is better than ChatGPT",
+    "Gemini saves time", "Gemini is creative", "Gemini helps students", "Gemini improves productivity",
+    "Gemini enhances creativity", "Gemini should be banned", "Gemini is disappointing", "Copilot improves productivity",
+    "Copilot makes coding easier", "Copilot is innovative", "Copilot is overrated", "Copilot has potential",
+    "Copilot is not accurate", "Copilot saves time", "AI threatens creative jobs", "AI helps with homework",
+    "AI is the end of creativity", "AI will destroy education", "AI is misunderstood", "AI can boost learning",
+    "AI creates new possibilities", "AI helps in healthcare", "AI threatens artists", "AI helps in art",
+    "AI is for lazy people", "AI enhances writing", "AI is replacing writers", "AI needs regulation",
+    "AI threatens freedom", "AI enhances creativity", "AI creates more problems", "AI improves customer experience",
+    "AI affects mental health", "AI should not replace people", "AI is not fair", "AI affects social interaction",
     "AI is misused", "AI threatens journalism", "AI replaces basic tasks"
 ]
+
 
 
 
@@ -103,5 +105,5 @@ lemmatizer = WordNetLemmatizer()
 print(df.head())
 
 # Guardar los posts en un archivo CSV
-df.to_csv("reddit_posts.csv", index=False)
+df.to_csv("data/reddit_posts.csv", index=False)
 print("✅ Los posts se han guardado correctamente en 'reddit_posts.csv'.")

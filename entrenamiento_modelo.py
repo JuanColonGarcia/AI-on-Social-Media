@@ -8,12 +8,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, f1_score, classification_report, confusion_matrix, roc_curve, auc
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.sentiment import SentimentIntensityAnalyzer
 import joblib
+from sklearn.metrics import roc_auc_score
+from sklearn.preprocessing import label_binarize
+
 
 # 🔽 Solo la primera vez que lo ejecutes
 nltk.download('punkt')
@@ -22,7 +25,7 @@ nltk.download('wordnet')
 nltk.download('vader_lexicon')
 
 # 🔄 Cargar CSV
-df = pd.read_csv("reddit_posts.csv")
+df = pd.read_csv("data/reddit_posts.csv")
 
 # 🔍 Comprobar columnas
 print("Columnas disponibles:", df.columns)
@@ -92,10 +95,38 @@ for nombre, modelo in modelos.items():
     plt.tight_layout()
     plt.show()
 
-# Guardar el vectorizador y los modelos entrenados
-joblib.dump(vectorizer, 'vectorizer.pkl')
-joblib.dump(modelos["Logistic Regression"], 'modelo_logistico.pkl')
-joblib.dump(modelos["Random Forest"], 'modelo_random_forest.pkl')
-joblib.dump(modelos["SVM"], 'modelo_svm.pkl')
+    # Calcular Curva ROC para cada clase
+if nombre == "SVM":
+    # Convertir las etiquetas de clase en formato binario (one-vs-rest) para la curva ROC
+    y_test_bin = label_binarize(y_test, classes=['Negativo', 'Neutral', 'Positivo'])
+    y_prob_svm = modelo.predict_proba(X_test)  # Obtener probabilidades de predicción
+
+    # Calcular el AUC para cada clase
+    fpr, tpr, thresholds = {}, {}, {}
+    roc_auc = {}
+    
+    for i, label in enumerate(['Negativo', 'Neutral', 'Positivo']):
+        fpr[label], tpr[label], thresholds[label] = roc_curve(y_test_bin[:, i], y_prob_svm[:, i])
+        roc_auc[label] = auc(fpr[label], tpr[label])
+
+    # Graficar la curva ROC para cada clase
+    plt.figure()
+    for label in ['Negativo', 'Neutral', 'Positivo']:
+        plt.plot(fpr[label], tpr[label], lw=2, label=f'{label} (AUC = {roc_auc[label]:0.2f})')
+
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title(f'Receiver Operating Characteristic (ROC) - {nombre}')
+    plt.legend(loc='lower right')
+    plt.show()
+
+# Guardar el vectorizador y los modelos entrenados en la carpeta models/
+joblib.dump(vectorizer, 'models/vectorizer.pkl')
+joblib.dump(modelos["Logistic Regression"], 'models/modelo_logistico.pkl')
+joblib.dump(modelos["Random Forest"], 'models/modelo_random_forest.pkl')
+joblib.dump(modelos["SVM"], 'models/modelo_svm.pkl')
 
 print("\n✅ Modelos y vectorizador guardados correctamente.")

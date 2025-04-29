@@ -31,7 +31,7 @@ else:
 df = df.dropna(subset=['fecha'])
 
 # Tomar solo las primeras 1000 filas válidas
-df = df.head(1000)
+df = df.head(5000)
 
 # Guardar el CSV limpio
 df.to_csv("data/nuevos_datos_limpios.csv", index=False)
