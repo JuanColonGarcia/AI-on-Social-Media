@@ -1,15 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Cargar CSV
 df = pd.read_csv('data/predicciones.csv')
 
-# Limpiar columnas
+# Limpiamos columnas
 df['titulo_procesado'] = df['titulo_procesado'].fillna('').astype(str)
 df['texto'] = df['texto'].fillna('').astype(str)
 df['prediccion_sentimiento'] = df['prediccion_sentimiento'].str.strip()
-
-# Convertir fecha
 df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
 
 while True:
@@ -17,13 +14,13 @@ while True:
     palabra_input = input("\n🔎 Escribe una palabra para buscar en los títulos: ").strip().lower()
 
     if not palabra_input:
-        print("⚠️ No escribiste ninguna palabra. Intenta de nuevo.")
+        print("No escribiste ninguna palabra. Intenta de nuevo.")
         continue
 
-    # Buscar títulos que contengan esa palabra
+    # Buscamos títulos que contengan esa palabra
     palabras_posibles = df['titulo_procesado'][df['titulo_procesado'].str.contains(palabra_input, case=False, regex=False)]
 
-    # Extraer palabras únicas que contengan el input
+    # Extraemos palabras únicas que contengan el input
     palabras_unicas = set()
     for titulo in palabras_posibles:
         for palabra in titulo.split():
@@ -32,17 +29,16 @@ while True:
 
     palabras_unicas = sorted(list(palabras_unicas))
 
-    # Mostrar sugerencias
+    # Mostramos las sugerencias
     if not palabras_unicas:
-        print(f"😔 No se encontraron coincidencias para '{palabra_input}'.")
+        print(f"No se encontraron coincidencias para '{palabra_input}'.")
         continue
     else:
-        print("\n🔎 Palabras encontradas:")
+        print("\nPalabras encontradas:")
         for idx, palabra in enumerate(palabras_unicas):
             print(f"{idx + 1}. {palabra}")
 
-    # Selección protegida
-    indices = input("\n📝 Escribe los números de las palabras que quieres buscar (separados por comas): ")
+    indices = input("\nEscribe los números de las palabras que quieres buscar (separados por comas): ")
     seleccion = []
     for i in indices.split(','):
         i = i.strip()
@@ -52,16 +48,15 @@ while True:
                 seleccion.append(palabras_unicas[idx])
 
     if not seleccion:
-        print("⚠️ No seleccionaste ninguna palabra válida. Intenta de nuevo.")
+        print("No seleccionaste ninguna palabra válida. Intenta de nuevo.")
         continue
 
-    print("\n✅ Palabras seleccionadas:", seleccion)
+    print("\nPalabras seleccionadas:", seleccion)
 
-    # ¿Dónde buscar?
-    print("\n📚 ¿Dónde quieres buscar?")
-    print("1. Solo en Títulos")
-    print("2. Solo en Textos")
-    print("3. En Títulos y Textos")
+    print("\n¿Dónde quieres buscar?")
+    print("1. Solo en títulos")
+    print("2. Solo en textos")
+    print("3. En títulos y textos")
     opcion = input("👉 Escribe 1, 2 o 3: ")
 
     if opcion == '1':
@@ -76,15 +71,14 @@ while True:
 
     df_filtrado = df[mask]
 
-    # Mostrar resultados
+    # Mostramos los resultados
     if df_filtrado.empty:
-        print("😔 No se encontraron posts con esas palabras.")
+        print("No se encontraron posts con esas palabras.")
     else:
-        print(f"\n✅ Encontrados {len(df_filtrado)} posts que contienen esas palabras.")
+        print(f"\nEncontrados {len(df_filtrado)} posts que contienen esas palabras.")
 
         sentimientos_count = df_filtrado['prediccion_sentimiento'].value_counts()
 
-        # Matplotlib
         plt.figure(figsize=(8, 6))
         sentimientos_count.plot(kind='bar', color=['blue', 'green', 'red'])
 
@@ -98,8 +92,7 @@ while True:
         plt.tight_layout()
         plt.show()
 
-    # ¿Quieres buscar otra palabra?
-    otra = input("\n🔁 ¿Quieres buscar otra palabra? (s/n): ").strip().lower()
+    otra = input("\n¿Quieres buscar otra palabra? (s/n): ").strip().lower()
     if otra != 's':
         print("\n ¡Hasta la próxima!")
         break
